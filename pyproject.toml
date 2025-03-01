@@ -1,0 +1,24 @@
+[project]
+name = "openstd_spider"
+version = "0.1.0"
+description = "国家标准全文公开平台下载工具"
+authors = [{ name = "SocialSisterYi", email = "1440239038@qq.com" }]
+dependencies = [
+    "httpx>=0.28.1",
+    "opencv-python>=4.11.0.86",
+    "numpy>=2.2.3",
+    "beautifulsoup4>=4.13.3",
+    "ddddocr>=1.5.6",
+    "lxml>=5.3.1",
+    "reportlab>=4.3.1",
+    "typer>=0.15.1",
+    "rich>=13.9.4",
+]
+requires-python = ">=3.10,<3.13"
+readme = "README.md"
+license = { text = "GPLV3" }
+scripts = { openstd_spider = "openstd_spider.__main__:app" }
+
+
+[tool.pdm]
+distribution = true

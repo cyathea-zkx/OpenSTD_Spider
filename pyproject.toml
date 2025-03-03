@@ -3,6 +3,7 @@ name = "openstd_spider"
 version = "0.1.0"
 description = "国家标准全文公开平台下载工具"
 authors = [{ name = "SocialSisterYi", email = "1440239038@qq.com" }]
+urls = { Repository = "https://github.com/SocialSisterYi/OpenSTD_Spider" }
 dependencies = [
     "httpx>=0.28.1",
     "opencv-python>=4.11.0.86",

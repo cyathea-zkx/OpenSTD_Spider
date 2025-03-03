@@ -1,11 +1,11 @@
 from pathlib import Path
+from typing import Callable, Optional
 
 from .captcha import fuck_captcha
 from .exception import HandleCaptchaError
 from .parse.gb688 import gb688_reorganize_page
 from .request import Gb688Dto, OpenstdDto
 from .schema import Gb688Page
-from typing import Callable, Optional
 
 
 def fuck_captcha_impl(dto: Gb688Dto):

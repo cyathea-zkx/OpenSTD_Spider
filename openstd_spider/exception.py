@@ -2,7 +2,7 @@ class OpenstdSpiderError(Exception): ...
 
 
 class NotFoundError(OpenstdSpiderError):
-    "不存在"
+    "资源不存在"
 
 
 class DownloadError(OpenstdSpiderError):

@@ -1,6 +1,6 @@
 import random
 import time
-from typing import IO, Callable, Generator, Optional
+from typing import IO, Callable, Optional
 
 from httpx import Client
 

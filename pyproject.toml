@@ -1,7 +1,7 @@
 [project]
 name = "openstd_spider"
-version = "0.1.0"
-description = "国家标准全文公开平台下载工具"
+version = '0.0.1'
+description = "国家标准全文公开系统下载工具"
 authors = [{ name = "SocialSisterYi", email = "1440239038@qq.com" }]
 urls = { Repository = "https://github.com/SocialSisterYi/OpenSTD_Spider" }
 dependencies = [

@@ -10,7 +10,9 @@ OpenSTD_Spider 是一个用于下载国家标准委“[国家标准全文公开�
 
 需要 Python 版本 >= 3.10
 
-TODO: 通过 PyPi 安装
+```bash
+pip install openstd_spider
+```
 
 也可以通过[源代码构建](#Building)
 
@@ -97,7 +99,7 @@ Usage: openstd_spider download [OPTIONS] TARGET
  Options
  --detail   -d            是否展示详细元数据
  --preview                强制下载预览版本
-            -o      PATH
+ --output   -o      PATH  下载路径或文件
  --help                   Show this message and exit.
 ```
 

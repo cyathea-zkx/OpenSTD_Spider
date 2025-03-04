@@ -1,0 +1,27 @@
+name: Build and publish pypi package
+on:
+    release:
+        types: [published]
+    workflow_dispatch:
+jobs:
+    build-publish:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Set up Python 3.10
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.10'
+                check-latest: true
+            - name: Install pdm
+              run: pip install pdm
+              shell: bash
+            - name: Install dependencies
+              run: pdm install
+              shell: bash
+            - name: Publish PyPi package
+              run: pdm publish -P ${{ secrets.PYPI_TOKEN }} -u __token__ --build
+              shell: bash

@@ -19,21 +19,22 @@ from rich.table import Table
 from typer import Argument, Option, Typer
 
 from openstd_spider import (
-    download_preview_img_impl,
-    fuck_captcha_impl,
-    reorganize_page_impl,
-)
-from openstd_spider.exception import HandleCaptchaError, NotFoundError
-from openstd_spider.parse.gb688 import gb688_uniq_imgid
-from openstd_spider.pdf import render_pdf_impl
-from openstd_spider.request import Gb688Dto, OpenstdDto
-from openstd_spider.schema import (
+    Gb688Dto,
+    HandleCaptchaError,
+    NotFoundError,
+    OpenstdDto,
     StdListItem,
     StdMetaFull,
     StdSearchResult,
     StdStatus,
     StdType,
+    __version__,
+    download_preview_img_impl,
+    fuck_captcha_impl,
+    reorganize_page_impl,
 )
+from openstd_spider.parse.gb688 import gb688_uniq_imgid
+from openstd_spider.pdf import render_pdf_impl
 from openstd_spider.utils import (
     is_std_code,
     name2std_type,
@@ -45,8 +46,10 @@ console = Console(highlight=False)
 
 app = Typer(
     name="OpenSTD Spider",
+    help=f"国家标准全文公开系统下载工具  Version: {__version__}",
     add_completion=False,
     pretty_exceptions_show_locals=False,
+    no_args_is_help=True,
 )
 openstd_dto = OpenstdDto()
 gb688_dto = Gb688Dto()
@@ -303,7 +306,9 @@ def meta_info(
 def download(
     detail: bool = Option(False, "-d", "--detail", help="是否展示详细元数据"),
     force_preview: bool = Option(False, "--preview", help="强制下载预览版本"),
-    download_path: Path | None = Option(None, "-o", show_default=False, writable=True),
+    download_path: Path | None = Option(
+        None, "-o", "--output", show_default=False, writable=True, help="下载路径或文件"
+    ),
     target: str = Argument(help="标准编号或url", show_default=False),
 ):
     "下载标准文件PDF"

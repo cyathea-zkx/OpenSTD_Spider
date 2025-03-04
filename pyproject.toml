@@ -14,6 +14,7 @@ dependencies = [
     "reportlab>=4.3.1",
     "typer>=0.15.1",
     "rich>=13.9.4",
+    "dataclasses-json>=0.6.7",
 ]
 requires-python = ">=3.10,<3.13"
 readme = "README.md"

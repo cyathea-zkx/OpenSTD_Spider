@@ -1,6 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from enum import Enum
+
+from dataclasses_json import config, dataclass_json
 
 
 @dataclass
@@ -34,17 +36,22 @@ class StdType(Enum):
     GBZ = 3
 
 
+@dataclass_json
 @dataclass
 class StdMeta:
     std_code: str
     is_ref: bool
     name_cn: str
+    status: StdStatus = field(metadata=config(encoder=lambda x: x.value))
+    pub_date: date = field(metadata=config(encoder=lambda x: x.isoformat()))
+    impl_date: date = field(metadata=config(encoder=lambda x: x.isoformat()))
+
+
+@dataclass
+class StdMetaFull(StdMeta):
     name_en: str
-    status: StdStatus
     allow_preview: bool
     allow_download: bool
-    pub_date: date
-    impl_date: date
     ccs: str
     ics: str
     maintenance_depat: str
@@ -54,16 +61,11 @@ class StdMeta:
 
 
 @dataclass
-class StdListItem:
+class StdListItem(StdMeta):
     id: str
-    std_code: str
-    is_ref: bool
-    name_cn: str
-    status: StdStatus
-    pub_date: date
-    impl_date: date
 
 
+@dataclass_json
 @dataclass
 class StdSearchResult:
     items: list[StdListItem]

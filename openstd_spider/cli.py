@@ -29,7 +29,7 @@ from openstd_spider.pdf import render_pdf_impl
 from openstd_spider.request import Gb688Dto, OpenstdDto
 from openstd_spider.schema import (
     StdListItem,
-    StdMeta,
+    StdMetaFull,
     StdSearchResult,
     StdStatus,
     StdType,
@@ -70,6 +70,7 @@ def search_one(keyword: str) -> StdListItem:
 
 def url_or_code2std_id(target: str) -> str:
     "通过url或精确标准编号得到标准id"
+    target = target.strip()
     if is_std_code(target):
         result = search_one(target)
         std_id = result.id
@@ -112,7 +113,7 @@ def show_std_list(result: StdSearchResult):
     )
 
 
-def show_std_meta(meta: StdMeta, detail: bool = True):
+def show_std_meta(meta: StdMetaFull, detail: bool = True):
     "输出标准详细信息"
     if detail:
         grid = Table(show_header=False, show_edge=False, padding=0)
@@ -263,6 +264,7 @@ def search(
     std_type: StdTypeSelect | None = Option(
         None, "-t", "--type", show_default=False, help="标准类型"
     ),
+    json_output: bool = Option(False, "-j", "--json", help="json格式输出"),
     keyword: str = Argument("", help="关键字"),
 ):
     "搜索 浏览标准文件列表"
@@ -273,11 +275,17 @@ def search(
         ps=ps,
         pn=pn,
     )
-    show_std_list(result)
+    if json_output:
+        sys.stdout.write(result.to_json(ensure_ascii=False, separators=(",", ":")))
+    else:
+        show_std_list(result)
 
 
 @app.command(name="info")
-def meta_info(target: str = Argument(help="标准编号或url")):
+def meta_info(
+    json_output: bool = Option(False, "-j", "--json", help="json格式输出"),
+    target: str = Argument(help="标准编号或url", show_default=False),
+):
     "查询标准文件元数据"
     std_id = url_or_code2std_id(target)
     try:
@@ -285,15 +293,18 @@ def meta_info(target: str = Argument(help="标准编号或url")):
     except NotFoundError:
         console.print(f"❌[red]目标资源id不存在")
         sys.exit(-1)
-    show_std_meta(meta, detail=True)
+    if json_output:
+        sys.stdout.write(meta.to_json(ensure_ascii=False, separators=(",", ":")))
+    else:
+        show_std_meta(meta, detail=True)
 
 
 @app.command(name="download")
 def download(
-    detail: bool = Option(False, "-d|", "--detail", help="是否展示详细元数据"),
+    detail: bool = Option(False, "-d", "--detail", help="是否展示详细元数据"),
     force_preview: bool = Option(False, "--preview", help="强制下载预览版本"),
     download_path: Path | None = Option(None, "-o", show_default=False, writable=True),
-    target: str = Argument(help="标准编号或url"),
+    target: str = Argument(help="标准编号或url", show_default=False),
 ):
     "下载标准文件PDF"
     if download_path is None:

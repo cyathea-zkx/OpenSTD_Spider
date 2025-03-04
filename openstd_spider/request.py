@@ -9,7 +9,7 @@ from openstd_spider.schema import StdSearchResult
 from .exception import DownloadError
 from .parse.gb688 import gb688_parse_page_sheet
 from .parse.openstd import openstd_parse_meta, openstd_parse_search_result
-from .schema import Gb688Page, StdMeta, StdStatus, StdType
+from .schema import Gb688Page, StdMetaFull, StdStatus, StdType
 
 BASE_URL_OPENSTD = "https://openstd.samr.gov.cn/bzgk/gb/"
 BASE_URL_GB688 = "http://c.gb688.cn/bzgk/gb/"
@@ -28,7 +28,13 @@ class OpenstdDto:
             follow_redirects=False,
         )
 
-    def get_std_meta(self, std_id: str) -> StdMeta:
+    def get_std_meta(self, std_id: str) -> StdMetaFull:
+        """获取标准元数据
+        Args:
+            std_id: 标准id
+        Returns:
+            StdMeta: 标准元数据
+        """
         resp = self.client.get(
             "/newGbInfo",
             params={
@@ -50,19 +56,33 @@ class OpenstdDto:
         order_by: str = "",
         order: str = "",
     ) -> StdSearchResult:
+        """搜索标准文件列表
+        Args:
+            keyword: 关键字
+            std_status: 标准状态
+            std_type: 标准类型
+            cate: 标准分类
+            date: 标准日期
+            ps: 每页项数
+            pn: 页码
+            order_by: 排序依据
+            order: 排序
+        Returns:
+            StdSearchResult: 搜索结果
+        """
         resp = self.client.get(
             "/std_list",
             params={
                 "r": random.random(),
                 "page": pn,
                 "pageSize": ps,
-                "p.p1": std_type.value,  # 分类
-                "p.p2": keyword,  # 关键字
-                "p.p5": std_status.value,  # 状态
-                "p.p6": cate,  # 分类
-                "p.p7": date,  # 时间
-                "p.p90": order_by,  # 排序依据
-                "p.p91": order,  # 排序
+                "p.p1": std_type.value,
+                "p.p2": keyword,
+                "p.p5": std_status.value,
+                "p.p6": cate,
+                "p.p7": date,
+                "p.p90": order_by,
+                "p.p91": order,
             },
         )
         resp.raise_for_status()
@@ -81,7 +101,12 @@ class Gb688Dto:
         )
 
     def get_pages(self, std_id: str) -> list[Gb688Page]:
-        """获取文档页"""
+        """获取文档页
+        Args:
+            std_id: 标准id
+        Returns:
+            list[Gb688Page]: 页面结构数据
+        """
         resp = self.client.get(
             "/showGb",
             params={
@@ -95,8 +120,13 @@ class Gb688Dto:
         resp.raise_for_status()
         return gb688_parse_page_sheet(resp.text)
 
-    def get_pageimg(self, img_id: str):
-        """获取页面图片"""
+    def get_pageimg(self, img_id: str) -> bytes:
+        """获取文档页
+        Args:
+            img_id: 图片资源id
+        Returns:
+            bytes: 预览图片数据
+        """
         resp = self.client.get(
             "/viewGbImg",
             params={
@@ -116,7 +146,12 @@ class Gb688Dto:
         fp: IO,
         cb: Optional[Callable[[int, int], None]] = None,
     ):
-        """下载pdf文件"""
+        """下载pdf文件
+        Args:
+          std_id: 标准id
+          fp: 下载文件IO对象
+          cb: 下载进度回调
+        """
         with self.client.stream(
             "GET",
             "/viewGb",
@@ -139,14 +174,22 @@ class Gb688Dto:
                 if cb:
                     cb(total_size, size)
 
-    def get_captcha(self):
-        """获取人机验证码"""
+    def get_captcha(self) -> bytes:
+        """获取人机验证码
+        Returns:
+            bytes: 验证码图片数据
+        """
         resp = self.client.get(f"/gc?_{int(time.time() * 1000)}")
         resp.raise_for_status()
         return resp.content
 
     def submit_captcha(self, code: str) -> bool:
-        """提交人机验证码"""
+        """提交人机验证码
+        Args:
+            code: 验证码内容
+        Returns:
+            bool: 验证码是否正确
+        """
         resp = self.client.post(
             "/verifyCode",
             data={

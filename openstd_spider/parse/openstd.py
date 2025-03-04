@@ -3,11 +3,11 @@ from datetime import date
 from bs4 import BeautifulSoup
 
 from ..exception import NotFoundError
-from ..schema import StdListItem, StdMeta, StdSearchResult, StdStatus
+from ..schema import StdListItem, StdMetaFull, StdSearchResult, StdStatus
 from ..utils import name2std_status
 
 
-def openstd_parse_meta(html_text: str) -> StdMeta:
+def openstd_parse_meta(html_text: str) -> StdMetaFull:
     html = BeautifulSoup(html_text, "lxml")
     tag1 = html.select_one("div.bor2")
     tag2 = tag1.select_one("table.tdlist")
@@ -20,14 +20,16 @@ def openstd_parse_meta(html_text: str) -> StdMeta:
     _, std_code = std_code[0].split("标准号：")
     std_code = std_code.strip()
 
-    return StdMeta(
+    return StdMetaFull(
         std_code=std_code,
         is_ref=is_ref,
         name_cn=tag2.select_one("tr:nth-of-type(1) td:nth-of-type(1) b").string,
         name_en=tag2.select_one("tr:nth-of-type(2) td:nth-of-type(1)").string.split(
             "英文标准名称："
         )[1],
-        status=StdStatus(name2std_status(tag2.select_one("tr:nth-of-type(3) td span").string.strip())),
+        status=StdStatus(
+            name2std_status(tag2.select_one("tr:nth-of-type(3) td span").string.strip())
+        ),
         allow_preview=tag2.select_one("tr:nth-of-type(4) button.ck_btn") is not None,
         allow_download=tag2.select_one("tr:nth-of-type(4) button.xz_btn") is not None,
         pub_date=date.fromisoformat(tag3[2].string.strip()),

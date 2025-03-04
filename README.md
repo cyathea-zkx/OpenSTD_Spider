@@ -12,13 +12,30 @@ OpenSTD_Spider 是一个用于下载国家标准委“[国家标准全文公开�
 
 TODO: 通过 PyPi 安装
 
-也可以通过[源代码构建](#🔨Building)
+也可以通过[源代码构建](#Building)
 
 ## 💻Usage
 
 ### 搜索公开标准列表
 
 使用方式为子命令 `openstd_spider search`
+
+```
+Usage: openstd_spider search [OPTIONS] [KEYWORD]
+
+ 搜索 浏览标准文件列表
+
+ Arguments
+ keyword      [KEYWORD]  关键字
+
+ Options
+ --ps              INTEGER RANGE [10<=x<=50]  每页条数
+ --pn      -p      INTEGER RANGE [x>=1]       页码
+ --status  -s      [现行|即将实施|废止]       标准状态
+ --type    -t      [GB|GBT|GBZ]               标准类型
+ --json    -j                                 json格式输出
+ --help                                       Show this message and exit.
+```
 
 浏览最新公开的标准文件
 
@@ -41,6 +58,19 @@ openstd_spider search '电动自行车'
 
 使用方式为子命令 `openstd_spider info`
 
+```
+Usage: openstd_spider info [OPTIONS] TARGET                              
+                                                                              
+ 查询标准文件元数据
+
+ Arguments
+ *    target      TEXT  标准编号或url [required]
+ 
+ Options
+ --json  -j        json格式输出
+ --help            Show this message and exit.
+```
+
 元数据包含标准编号、中英文名称、分类编号、发布及实施日期、主管及归口单位等。
 
 通过精确的标准编号（非精确的标准编号最多一个匹配项）或页面的 URL 可以进行查询。
@@ -56,6 +86,21 @@ openstd_spider info 'https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=72969DAA
 
 使用方式为子命令 `openstd_spider download`
 
+```
+Usage: openstd_spider download [OPTIONS] TARGET
+
+ 下载标准文件PDF
+
+ Arguments
+ *    target      TEXT  标准编号或url [required]
+
+ Options
+ --detail   -d            是否展示详细元数据
+ --preview                强制下载预览版本
+            -o      PATH
+ --help                   Show this message and exit.
+```
+
 标准文件有两种公开方式，分别是仅允许预览和允许下载，这两种方式均可进行 PDF 文件下载，优先以直接下载方式下载，使用预览方式下载将无任何目录索引及可复制文本。
 
 对于禁止预览和下载的标准文件，本项目无法下载。
@@ -63,9 +108,9 @@ openstd_spider info 'https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=72969DAA
 通过精确的标准编号（非精确的标准编号最多一个匹配项）或页面的 URL 可以进行下载。
 
 ```bash
-# 通过精确标准编号查询
+# 通过精确标准编号下载
 openstd_spider download 'GB 18030-2022'
-# 通过页面 URL 查询
+# 通过页面 URL 下载
 openstd_spider download 'https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=72969DAA3DA5795AD2163528FF57166C'
 ```
 
@@ -75,7 +120,7 @@ openstd_spider download 'https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=7296
 
 - 集成搜索、元数据查询、PDF 下载三个功能，通过子命令进行调用
 - 元数据查询和 PDF 下载支持自动识别 URL 或标准编号
-- 查询结果及下载状态以 TUI 方式在终端显示
+- 查询结果及下载状态以 TUI 方式在终端显示，也可以输出为 json
 - 自动识别下载时的人机验证码
 - 预览方式下载自动拼接打乱的图块，并将图片生成 pdf 文件
 

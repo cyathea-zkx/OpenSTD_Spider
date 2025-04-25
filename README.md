@@ -1,4 +1,4 @@
-##本项目在原项目的基础上添加了批量下载和查询功能
+### 本项目在原项目的基础上添加了批量下载和查询功能
 ### 查询标准文件以便于下载的方式批量输出
 使用方式为子命令 `openstd_spider search`
 
@@ -16,10 +16,11 @@ Usage: openstd_spider search [OPTIONS] [KEYWORD]
  --status  -s      [现行|即将实施|废止]       标准状态
  --type    -t      [GB|GBT|GBZ]               标准类型
  --json    -j                                 json格式输出
- --help                                       Show this message and exit.
  --all                                        多页查询
  --max             RANGE[10<=10000]           查询数量
  --simple-json                                简单json输出，便于批量下载
+ --help                                       Show this message and exit.
+
 ```
 
 
@@ -40,12 +41,14 @@ Usage: openstd_spider download [OPTIONS] TARGET
  --preview                强制下载预览版本
  --output   -o      PATH  下载路径或文件
  --help                   Show this message and exit.
+
+批量下载使用标准编号并列
+openstd_spider download "GB/T 10781.5-2025" "GB/T 4354-2025" "GB/T 5844-2025"
 ```
 
 ```bash
 
-#批量下载使用标准编号并列
-openstd_spider download "GB/T 10781.5-2025" "GB/T 4354-2025" "GB/T 5844-2025"
+
 
 
 ## ⚠️Disclaimers

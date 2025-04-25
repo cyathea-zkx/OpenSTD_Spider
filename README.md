@@ -37,6 +37,9 @@ Usage: openstd_spider search [OPTIONS] [KEYWORD]
  --type    -t      [GB|GBT|GBZ]               标准类型
  --json    -j                                 json格式输出
  --help                                       Show this message and exit.
+ --all                                        多页查询
+ --max             RANGE[10<=10000]           查询数量
+ --simple-json                                简单json输出，便于批量下载
 ```
 
 浏览最新公开的标准文件
@@ -114,6 +117,8 @@ Usage: openstd_spider download [OPTIONS] TARGET
 openstd_spider download 'GB 18030-2022'
 # 通过页面 URL 下载
 openstd_spider download 'https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=72969DAA3DA5795AD2163528FF57166C'
+#批量下载使用标准编号并列
+openstd_spider download "GB/T 10781.5-2025" "GB/T 4354-2025" "GB/T 5844-2025"
 ```
 
 默认情况下 PDF 文件将下载到当前目录，并以标准编号命名，也可加`-o`参数指定输出路径或文件名。

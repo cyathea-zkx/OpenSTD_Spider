@@ -42,7 +42,7 @@ from openstd_spider.utils import (
     std_status2name,
 )
 
-console = Console(highlight=False)
+console = Console(highlight=False, file=sys.stderr)  # 批量搜索时进度条在命令行显示
 
 app = Typer(
     name="OpenSTD Spider",

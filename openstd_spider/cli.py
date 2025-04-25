@@ -257,7 +257,7 @@ class StdTypeSelect(Enum):
     GBZ = "GBZ"
 
 
-def get_all_targets(keyword: str, ps: int = 50, std_type: StdType = StdType.ALL, std_status: StdStatus = StdStatus.ALL, max_results: int = 10000) -> list[str]:
+def get_all_targets(keyword: str, ps: int = 50, std_type: StdType = StdType.ALL, std_status: StdStatus = StdStatus.ALL, max_results: int = 100000) -> list[str]:
     """
     批量获取指定搜索条件的所有标准编号，最多获取指定数量。
 
@@ -322,7 +322,7 @@ def search(
     ),
     json_output: bool = Option(False, "-j", "--json", help="json格式输出"),
     all_results: bool = Option(False, "--all", help="获取所有搜索结果，忽略 -p 参数"),
-    max_results: int = Option(10000, "--max", help="最大获取数量", min=1),
+    max_results: int = Option(100000, "--max", help="最大获取数量", min=1),
     simple_json: bool = Option(False, "--simple-json", help="简化JSON输出，只包含标准编号"),
     keyword: str = Argument("", help="关键字"),
 ):

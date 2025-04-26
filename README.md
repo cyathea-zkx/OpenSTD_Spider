@@ -42,8 +42,11 @@ Usage: openstd_spider download [OPTIONS] TARGET
  --output   -o      PATH  下载路径或文件
  --help                   Show this message and exit.
 
-批量下载使用标准编号并列
+少量批量下载使用标准编号并列
 openstd_spider download "GB/T 10781.5-2025" "GB/T 4354-2025" "GB/T 5844-2025"
+
+大量批量下载读取文本文件获得下载目录
+openstd_spider download-from-file xxx.txt
 ```
 
 ```bash

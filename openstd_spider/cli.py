@@ -454,3 +454,92 @@ def download_batch(
             break # 如果指定了单个输出文件，只处理第一个目标
 
     console.print("[blue]批量下载处理完成[/blue]")
+@app.command(name="download-from-file")
+def download_from_file(
+    detail: bool = Option(False, "-d", "--detail", help="是否展示详细元数据"),
+    force_preview: bool = Option(False, "--preview", help="强制下载预览版本"),
+    download_path: Path | None = Option(
+        None, "-o", "--output", show_default=False, writable=True, help="下载路径或目录"
+    ),
+    file_path: Path = Argument(..., help="包含标准编号列表的文件路径（JSON格式）", readable=True),
+):
+    "从文件读取标准编号列表并下载标准文件PDF"
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read().strip()
+            # 解析文件内容 - 处理 "标准1" "标准2" "标准3" 格式
+            import re
+            import json
+            
+            # 尝试直接解析JSON数组
+            try:
+                # 如果文件是完整的JSON数组格式
+                targets = json.loads(f"[{content}]" if not content.startswith("[") else content)
+            except json.JSONDecodeError:
+                # 如果不是完整JSON，则尝试提取带引号的部分
+                targets = re.findall(r'"([^"]+)"', content)
+            
+            if not targets:
+                console.print(f"[red]× [bold red]无法从文件中解析标准编号")
+                sys.exit(-1)
+            
+            console.print(f"[green]✔ [bold green]从文件中读取了 {len(targets)} 个标准编号")
+            
+    except Exception as e:
+        console.print(f"[red]× [bold red]读取文件失败: {str(e)}")
+        sys.exit(-1)
+        
+    process_download(targets, detail, force_preview, download_path)
+
+def process_download(targets: list[str], detail: bool, force_preview: bool, download_path: Path | None):
+    "处理下载逻辑"
+    if download_path is not None and download_path.is_file() and len(targets) > 1:
+        console.print(f"[yellow]⚠️ [bold yellow]指定了单个输出文件，但提供了多个下载目标，只会下载第一个目标到该文件。建议指定输出目录。")
+
+    for target in targets:
+        console.print(f"[blue]开始处理目标: {target}[/blue]")
+        std_id = url_or_code2std_id(target)
+        try:
+            meta = openstd_dto.get_std_meta(std_id)
+        except NotFoundError:
+            console.print(f"❌[bold red]目标资源id '{target}' 不存在")
+            continue  # 继续处理下一个目标
+
+        show_std_meta(meta, detail=detail)
+        console.print("[green]" + "─" * 30)
+
+        if meta.allow_download or meta.allow_preview:
+            try:
+                fuck_captcha_impl(gb688_dto)
+            except HandleCaptchaError:
+                console.print(f"[red]× [bold red]验证码识别失败，跳过 '{target}'")
+                continue  # 跳过当前目标
+            console.print(f"[green]✔ [bold green]验证码识别成功")
+        else:
+            console.print(f"[red]× [bold red]资源 '{target}' 不允许下载")
+            continue  # 跳过当前目标
+
+        # 处理下载路径
+        if download_path is None or download_path.is_dir():
+            output_path = Path(".") if download_path is None else download_path
+            output_path /= meta.std_code.replace("/", "") + ".pdf"
+        else:
+            output_path = download_path  # 如果指定了单个文件，只对第一个目标生效
+
+        if meta.allow_download and not force_preview:
+            # 文件下载
+            download_file(std_id, output_path)
+        elif meta.allow_preview:
+            # 预览下载
+            console.print(
+                f"[yellow]! [bold yellow]'{target}' 不允许直接下载, 进行预览方式合并重组下载"
+            )
+            download_preview(std_id, output_path)
+
+        console.print(f"[green]✔ [bold green]'{target}' 下载完成，保存至: {output_path}[/green]")
+        console.print("[green]" + "=" * 30)
+
+        if download_path is not None and download_path.is_file():
+            break # 如果指定了单个输出文件，只处理第一个目标
+
+    console.print("[blue]批量下载处理完成[/blue]")

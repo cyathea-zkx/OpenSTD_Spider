@@ -54,7 +54,33 @@ openstd_spider download-from-file xxx.txt
 
 ```bash
 
+## 🔨Building
 
+克隆项目源码（可选）
+
+```bash
+git clone https://github.com/cyathea-zkx/OpenSTD_Spider.git
+```
+
+或从 Release 中下载源码包
+
+安装项目依赖，请确保已经安装 pdm
+
+```bash
+pdm install
+```
+
+打包构建项目
+
+```bash
+pdm build
+```
+
+安装构建包到全局（可选）
+
+```bash
+pip install dist/openstd_spider-xxx.whl
+```
 
 
 ## ⚠️Disclaimers

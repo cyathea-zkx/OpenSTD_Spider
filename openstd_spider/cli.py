@@ -323,7 +323,7 @@ def search(
     json_output: bool = Option(False, "-j", "--json", help="json格式输出"),
     all_results: bool = Option(False, "--all", help="获取所有搜索结果，忽略 -p 参数"),
     max_results: int = Option(100000, "--max", help="最大获取数量", min=1),
-    simple_json: bool = Option(False, "--simple-json", help="简化JSON输出，只包含标准编号"),
+    simple_json: bool = Option(False, "--simple", help="简化输出，只包含标准编号"),
     keyword: str = Argument("", help="关键字"),
 ):
     "搜索 浏览标准文件列表"

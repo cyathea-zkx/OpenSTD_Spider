@@ -342,7 +342,6 @@ def search(
             if simple_json:
                 # 简化输出，只包含标准编号，以空格分隔
                 output = " ".join(f'"{target}"' for target in all_targets)
-                sys.stdout.write(output)
             else:
                 # 常规JSON输出，包含更多信息
                 results_dict = [{"std_code": target} for target in all_targets]

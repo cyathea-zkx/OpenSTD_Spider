@@ -18,7 +18,7 @@ Usage: openstd_spider search [OPTIONS] [KEYWORD]
  --json    -j                                 json格式输出
  --all                                        查询全部
  --max             RANGE[10<=100000]          查询数量上限,默认10w
- --simple                                     简单txt输出，便于批量下载
+ --simple > xxx.txt                           查询编号简单输出到xxx.txt，便于批量下载
  --help                                       Show this message and exit.
 
 ```

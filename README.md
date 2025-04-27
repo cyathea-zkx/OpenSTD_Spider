@@ -21,6 +21,9 @@ Usage: openstd_spider search [OPTIONS] [KEYWORD]
  --simple > xxx.txt                           查询编号简单输出到xxx.txt，便于批量下载
  --help                                       Show this message and exit.
 
+搜索全部GBT标准并存到GBT.txt文件中
+openstd_spider search -t GBT -all -simple > GBT.txt
+
 ```
 
 

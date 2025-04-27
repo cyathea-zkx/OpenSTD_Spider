@@ -50,11 +50,10 @@ openstd_spider download "GB/T 10781.5-2025" "GB/T 4354-2025" "GB/T 5844-2025"
 
 大量批量下载读取文本文件获得下载目录
 openstd_spider download-from-file xxx.txt
-```
-
-```bash
 
 ```
+
+
 ### 🔨Building
 
 克隆项目源码（可选）

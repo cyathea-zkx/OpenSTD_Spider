@@ -16,9 +16,9 @@ Usage: openstd_spider search [OPTIONS] [KEYWORD]
  --status  -s      [现行|即将实施|废止]       标准状态
  --type    -t      [GB|GBT|GBZ]               标准类型
  --json    -j                                 json格式输出
- --all                                        多页查询
- --max             RANGE[10<=10000]           查询数量
- --simple-json                                简单json输出，便于批量下载
+ --all                                        查询全部
+ --max             RANGE[10<=100000]          查询数量上限,默认10w
+ --simple                                     简单txt输出，便于批量下载
  --help                                       Show this message and exit.
 
 ```
